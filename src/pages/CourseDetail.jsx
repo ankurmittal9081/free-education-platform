@@ -1,17 +1,16 @@
 import { Link, useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
-
 import { doc, setDoc, getDoc, serverTimestamp } from "firebase/firestore";
 import { auth, db } from "../firebase";
 import { useAuthState } from "react-firebase-hooks/auth";
 
 function CourseDetail() {
   const { courseId } = useParams();
-
-  const [activePlaylist, setActivePlaylist] = useState(null);
   const [user] = useAuthState(auth);
 
-  // 🔥 COURSE + PLAYLIST DATA
+  const [activePlaylist, setActivePlaylist] = useState(null);
+
+  // 🔥 COURSE DATA
   const courseData = {
     dsa: {
       title: "Data Structures & Algorithms",
@@ -22,7 +21,6 @@ function CourseDetail() {
       students: 6500,
       duration: "10 weeks",
       lastUpdated: "2025",
-
       sections: [
         {
           title: "Array & String Playlist",
@@ -46,7 +44,7 @@ function CourseDetail() {
 
   const course = courseData[courseId] || courseData.dsa;
 
-  // 🔥 LOAD LAST WATCHED PLAYLIST (Firestore)
+  // 🔥 LOAD LAST WATCHED PLAYLIST
   useEffect(() => {
     if (!user) return;
 
@@ -61,6 +59,20 @@ function CourseDetail() {
 
     loadProgress();
   }, [user, courseId]);
+
+  // 🔥 PROGRESS CALCULATION
+  const totalPlaylists = course.sections.length;
+  const watchedIndex = course.sections.findIndex((s) => {
+    const id = Array.isArray(s.playlistIds)
+      ? s.playlistIds[0]
+      : s.playlistIds;
+    return id === activePlaylist;
+  });
+
+  const progressPercent =
+    watchedIndex === -1
+      ? 0
+      : Math.round(((watchedIndex + 1) / totalPlaylists) * 100);
 
   return (
     <div className="course-detail-page">
@@ -88,7 +100,7 @@ function CourseDetail() {
         </div>
       </div>
 
-      {/* 🎥 PLAYLIST PLAYER */}
+      {/* 🎥 VIDEO PLAYER */}
       {activePlaylist && (
         <div className="video-player-section" style={{ marginTop: "20px" }}>
           <iframe
@@ -119,6 +131,37 @@ function CourseDetail() {
 
         {/* CURRICULUM */}
         <div className="course-curriculum">
+          {/* 📈 PROGRESS BAR */}
+          <div
+            style={{
+              marginBottom: "16px",
+              padding: "12px",
+              background: "#ffffff",
+              borderRadius: "8px",
+              boxShadow: "0 2px 8px rgba(0,0,0,0.05)",
+            }}
+          >
+            📈 Progress: <strong>{progressPercent}%</strong>
+            <div
+              style={{
+                marginTop: "6px",
+                height: "10px",
+                background: "#e5e7eb",
+                borderRadius: "6px",
+              }}
+            >
+              <div
+                style={{
+                  height: "100%",
+                  width: `${progressPercent}%`,
+                  background: "#22c55e",
+                  borderRadius: "6px",
+                  transition: "0.3s",
+                }}
+              ></div>
+            </div>
+          </div>
+
           <h2>📚 Course Curriculum</h2>
 
           {course.sections.map((section, index) => {
