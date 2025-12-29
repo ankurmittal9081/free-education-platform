@@ -226,6 +226,13 @@ function Courses() {
                   Start Learning Free →
                 </button>
               </Link>
+
+              <Link to={`/forum/${course.id}`}>
+  <button className="secondary-button" style={{ marginTop: "10px" }}>
+    💬 Discuss Doubts
+  </button>
+</Link>
+
             </div>
           ))
         )}

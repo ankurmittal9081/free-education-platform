@@ -84,13 +84,24 @@ function Home() {
                 <Link to="/profile" className="nav-link">
                   👤 {user.displayName?.split(" ")[0] || "Profile"}
                 </Link>
+
                 <Link to="/courses" className="nav-btn-primary">
                   My Courses
+                </Link>
+
+                <Link to="/revision" className="nav-btn-primary">
+                  📚 Revision
+                </Link>
+
+                <Link to="/notes" className="nav-btn-primary">
+                  💎 Premium Notes
                 </Link>
               </>
             ) : (
               <>
-                <Link to="/login" className="nav-link">Login</Link>
+                <Link to="/login" className="nav-link">
+                  Login
+                </Link>
                 <Link to="/signup" className="nav-btn-primary">
                   Sign Up Free
                 </Link>

@@ -1,5 +1,13 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
+import Forum from "./pages/Forum";
+import ForumDetail from "./pages/ForumDetail";
+import Revision from "./pages/Revision";
+import AdminAnalytics from "./pages/AdminAnalytics";
+
+import PremiumNotes from "./pages/PremiumNotes";
+import AdminNotes from "./pages/AdminNotes";
+
 
 import Home from "./pages/Home";
 import Courses from "./pages/Courses";
@@ -22,12 +30,66 @@ function App() {
       <Routes>
         {/* Public Routes */}
         <Route path="/" element={<Home />} />
+        <Route path="/notes" element={<PremiumNotes />} />
+
+<Route
+  path="/admin/notes"
+  element={
+    <PrivateRoute>
+      <AdminNotes />
+    </PrivateRoute>
+  }
+/>
+
+        <Route path="/forum/:courseId" element={<Forum />} />
+        <Route path="/forum-detail/:id" element={<ForumDetail />} />
         <Route path="/signup" element={<SignUp />} />
         <Route path="/login" element={<Login />} />
         <Route path="/courses" element={<Courses />} />
         <Route path="/course/:courseId" element={<CourseDetail />} />
         <Route path="/mentorship" element={<Mentorship />} />
         <Route path="/admin-login" element={<AdminLogin />} />
+<Route
+  path="/revision"
+  element={
+    <PrivateRoute>
+      <Revision />
+    </PrivateRoute>
+  }
+/>
+<Route
+  path="/admin/analytics"
+  element={
+    <PrivateRoute>
+      <AdminAnalytics />
+    </PrivateRoute>
+  }
+/>
+<Route
+  path="/admin/analytics"
+  element={
+    <PrivateRoute>
+      <AdminAnalytics />
+    </PrivateRoute>
+  }
+/>
+<Route
+  path="/admin/analytics"
+  element={
+    <PrivateRoute>
+      <AdminAnalytics />
+    </PrivateRoute>
+  }
+/>
+
+<Route
+  path="/admin/analytics"
+  element={
+    <PrivateRoute>
+      <AdminAnalytics />
+    </PrivateRoute>
+  }
+/>
 
         {/* Protected User Route */}
         <Route
