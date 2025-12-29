@@ -1,97 +1,43 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
-import Forum from "./pages/Forum";
-import ForumDetail from "./pages/ForumDetail";
-import Revision from "./pages/Revision";
-import AdminAnalytics from "./pages/AdminAnalytics";
-
-import PremiumNotes from "./pages/PremiumNotes";
-import AdminNotes from "./pages/AdminNotes";
-
 
 import Home from "./pages/Home";
 import Courses from "./pages/Courses";
 import CourseDetail from "./pages/CourseDetail";
 import Mentorship from "./pages/Mentorship";
+import Login from "./pages/Login";
+import SignUp from "./pages/SignUp";
+import Profile from "./pages/Profile";
+
+import Revision from "./pages/Revision";
+import PremiumNotes from "./pages/PremiumNotes";
+import Certificates from "./pages/Certificates";
+
 import Admin from "./pages/Admin";
 import AdminLogin from "./pages/AdminLogin";
-import SignUp from "./pages/SignUp";
-import Login from "./pages/Login";
-import Profile from "./pages/Profile";
+import AdminAnalytics from "./pages/AdminAnalytics";
+import AdminNotes from "./pages/AdminNotes";
+import AdminCertificates from "./pages/AdminCertificates";
 
 import PrivateRoute from "./components/PrivateRoute";
 
 function App() {
   return (
     <BrowserRouter>
-      {/* 🔔 Toast container – ONLY ONCE */}
       <Toaster position="top-right" />
 
       <Routes>
-        {/* Public Routes */}
+        {/* PUBLIC */}
         <Route path="/" element={<Home />} />
-        <Route path="/notes" element={<PremiumNotes />} />
-
-<Route
-  path="/admin/notes"
-  element={
-    <PrivateRoute>
-      <AdminNotes />
-    </PrivateRoute>
-  }
-/>
-
-        <Route path="/forum/:courseId" element={<Forum />} />
-        <Route path="/forum-detail/:id" element={<ForumDetail />} />
-        <Route path="/signup" element={<SignUp />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<SignUp />} />
         <Route path="/courses" element={<Courses />} />
         <Route path="/course/:courseId" element={<CourseDetail />} />
         <Route path="/mentorship" element={<Mentorship />} />
+        <Route path="/notes" element={<PremiumNotes />} />
         <Route path="/admin-login" element={<AdminLogin />} />
-<Route
-  path="/revision"
-  element={
-    <PrivateRoute>
-      <Revision />
-    </PrivateRoute>
-  }
-/>
-<Route
-  path="/admin/analytics"
-  element={
-    <PrivateRoute>
-      <AdminAnalytics />
-    </PrivateRoute>
-  }
-/>
-<Route
-  path="/admin/analytics"
-  element={
-    <PrivateRoute>
-      <AdminAnalytics />
-    </PrivateRoute>
-  }
-/>
-<Route
-  path="/admin/analytics"
-  element={
-    <PrivateRoute>
-      <AdminAnalytics />
-    </PrivateRoute>
-  }
-/>
 
-<Route
-  path="/admin/analytics"
-  element={
-    <PrivateRoute>
-      <AdminAnalytics />
-    </PrivateRoute>
-  }
-/>
-
-        {/* Protected User Route */}
+        {/* USER PROTECTED */}
         <Route
           path="/profile"
           element={
@@ -101,12 +47,57 @@ function App() {
           }
         />
 
-        {/* Protected Admin Route */}
+        <Route
+          path="/revision"
+          element={
+            <PrivateRoute>
+              <Revision />
+            </PrivateRoute>
+          }
+        />
+
+        <Route
+          path="/certificates"
+          element={
+            <PrivateRoute>
+              <Certificates />
+            </PrivateRoute>
+          }
+        />
+
+        {/* ADMIN PROTECTED */}
         <Route
           path="/admin"
           element={
             <PrivateRoute>
               <Admin />
+            </PrivateRoute>
+          }
+        />
+
+        <Route
+          path="/admin/analytics"
+          element={
+            <PrivateRoute>
+              <AdminAnalytics />
+            </PrivateRoute>
+          }
+        />
+
+        <Route
+          path="/admin/notes"
+          element={
+            <PrivateRoute>
+              <AdminNotes />
+            </PrivateRoute>
+          }
+        />
+
+        <Route
+          path="/admin/certificates"
+          element={
+            <PrivateRoute>
+              <AdminCertificates />
             </PrivateRoute>
           }
         />
