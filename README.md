@@ -5,7 +5,7 @@ A full-stack education platform built using React and Firebase, designed to prov
 This project focuses on accessibility, scalability, and real-time experience, making it ideal for students and mentors.
 
 🚀 Features
-👨‍🎓 Student Features
+👨‍🎓 Student Feature
 
 Browse free courses
 
