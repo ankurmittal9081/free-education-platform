@@ -1,6 +1,14 @@
 import { useEffect, useState } from "react";
 import { auth, db } from "../firebase";
-import { doc, getDoc } from "firebase/firestore";
+import {
+  doc,
+  getDoc,
+  updateDoc,
+  collection,
+  query,
+  where,
+  getDocs,
+} from "firebase/firestore";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { Link } from "react-router-dom";
 import Navbar from "../components/Navbar";
@@ -8,88 +16,129 @@ import Navbar from "../components/Navbar";
 function Profile() {
   const [user] = useAuthState(auth);
   const [userData, setUserData] = useState(null);
+  const [bookings, setBookings] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    async function fetchUserData() {
-      if (user) {
-        try {
-          const userDoc = await getDoc(doc(db, "users", user.uid));
-          if (userDoc.exists()) {
-            setUserData(userDoc.data());
-          }
-        } catch (error) {
-          console.error("Error fetching user data:", error);
-        } finally {
-          setLoading(false);
-        }
-      }
-    }
+  const [editMode, setEditMode] = useState(false);
+  const [name, setName] = useState("");
 
-    fetchUserData();
+  /* ===== FETCH USER ===== */
+  useEffect(() => {
+    async function fetchUser() {
+      if (!user) return;
+      const snap = await getDoc(doc(db, "users", user.uid));
+      if (snap.exists()) {
+        setUserData(snap.data());
+        setName(snap.data().name || "Student");
+      }
+      setLoading(false);
+    }
+    fetchUser();
   }, [user]);
 
-  if (loading) {
-    return <div className="loading-container"><div className="spinner"></div></div>;
+  /* ===== FETCH BOOKINGS ===== */
+  useEffect(() => {
+    async function fetchBookings() {
+      if (!user?.email) return;
+      const q = query(
+        collection(db, "bookings"),
+        where("email", "==", user.email)
+      );
+      const snap = await getDocs(q);
+      setBookings(snap.docs.map((d) => d.data()));
+    }
+    fetchBookings();
+  }, [user]);
+
+  async function saveProfile() {
+    await updateDoc(doc(db, "users", user.uid), { name });
+    setUserData((p) => ({ ...p, name }));
+    setEditMode(false);
   }
+
+  if (loading) return <p>Loading...</p>;
 
   return (
     <>
       <Navbar />
+
       <div className="profile-page">
         <div className="profile-container">
+          {/* HEADER */}
           <div className="profile-header">
             <div className="profile-avatar">
-              {user?.displayName?.charAt(0).toUpperCase() || '👤'}
+              {name.charAt(0).toUpperCase()}
             </div>
-            <h1>{user?.displayName || 'Student'}</h1>
-            <p>{user?.email}</p>
+
+            {editMode ? (
+              <>
+                <input
+                  className="edit-input"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                />
+                <button className="primary-button" onClick={saveProfile}>
+                  Save
+                </button>
+              </>
+            ) : (
+              <>
+                <h1>{name}</h1>
+                <p>{user.email}</p>
+                <button className="edit-btn" onClick={() => setEditMode(true)}>
+                  ✏️ Edit
+                </button>
+              </>
+            )}
           </div>
 
+          {/* STATS */}
           <div className="profile-stats">
+            <div className="stat-box">🔥 {userData?.streak || 0} Day Streak</div>
             <div className="stat-box">
-              <div className="stat-icon">🔥</div>
-              <div className="stat-info">
-                <h3>{userData?.streak || 0}</h3>
-                <p>Day Streak</p>
-              </div>
+              📚 {userData?.enrolledCourses?.length || 0} Courses
             </div>
-
             <div className="stat-box">
-              <div className="stat-icon">📚</div>
-              <div className="stat-info">
-                <h3>{userData?.enrolledCourses?.length || 0}</h3>
-                <p>Courses Enrolled</p>
-              </div>
-            </div>
-
-            <div className="stat-box">
-              <div className="stat-icon">✅</div>
-              <div className="stat-info">
-                <h3>{userData?.completedLessons?.length || 0}</h3>
-                <p>Lessons Completed</p>
-              </div>
+              ✅ {userData?.completedLessons?.length || 0} Lessons
             </div>
           </div>
 
+          {/* COURSES */}
           <div className="profile-section">
             <h2>📖 Your Learning Journey</h2>
-            {userData?.enrolledCourses?.length > 0 ? (
+
+            {userData?.enrolledCourses?.length ? (
               <div className="enrolled-courses">
-                {userData.enrolledCourses.map((courseId, index) => (
-                  <Link to={`/course/${courseId}`} key={index} className="enrolled-course-card">
-                    <h3>{courseId.toUpperCase()}</h3>
-                    <p>Continue learning →</p>
+                {userData.enrolledCourses.map((cid) => (
+                  <Link
+                    key={cid}
+                    to={`/course/${cid}`}
+                    className="enrolled-course-card"
+                  >
+                    {cid.toUpperCase()} → Continue
                   </Link>
                 ))}
               </div>
             ) : (
-              <div className="empty-state">
-                <p>No courses enrolled yet</p>
-                <Link to="/courses">
-                  <button className="primary-button">Browse Courses</button>
-                </Link>
-              </div>
+              <Link to="/courses">
+                <button className="primary-button">
+                  Browse Courses
+                </button>
+              </Link>
+            )}
+          </div>
+
+          {/* MENTORSHIP */}
+          <div className="profile-section">
+            <h2>🤝 Mentorship History</h2>
+            {bookings.length === 0 ? (
+              <p>No mentorship sessions yet</p>
+            ) : (
+              bookings.map((b, i) => (
+                <div key={i} className="enrolled-course-card">
+                  <b>{b.topic}</b> | {b.slot} | ₹{b.price || 99}
+                </div>
+              ))
             )}
           </div>
         </div>

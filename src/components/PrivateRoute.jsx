@@ -12,13 +12,16 @@ function PrivateRoute({ children }) {
       setUser(currentUser);
       setLoading(false);
     });
-
     return () => unsubscribe();
   }, []);
 
-  if (loading) return <p>Checking authentication...</p>;
+  if (loading) {
+    return <p style={{ textAlign: "center" }}>Checking login...</p>;
+  }
 
-  return user ? children : <Navigate to="/admin-login" />;
+  if (!user) return <Navigate to="/login" replace />;
+
+  return children;
 }
 
 export default PrivateRoute;
