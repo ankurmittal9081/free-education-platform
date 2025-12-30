@@ -5,21 +5,21 @@ A full-stack education platform built using React and Firebase, designed to prov
 This project focuses on accessibility, scalability, and real-time experience, making it ideal for students and mentors.
 
 🚀 Features
-👨‍🎓 Student Feature
+👨‍🎓 Student Features
 
-Browse free courses
+.Browse free courses
 
-View detailed course curriculum
+.View detailed course curriculum
 
-Book mentorship sessions
+.Book mentorship sessions
 
-Book mock interviews
+.Book mock interviews
 
-View learning progress on profile page
+.View learning progress on profile page
 
-Real-time success & error notifications
+.Real-time success & error notifications
 
-Clean, modern & responsive UI
+.Clean, modern & responsive UI
 
 🛠️ Admin Features
 
@@ -64,59 +64,25 @@ Deployment
 
 Vercel
 
-📂 Project Structure
-free-ed-platform/
-│
-├── public/
-├── src/
-│   ├── components/
-│   │   ├── AdminRoute.jsx
-│   │   ├── ExportButton.jsx
-│   │   └── Navbar.jsx
-│   │
-│   ├── pages/
-│   │   ├── Login.jsx
-│   │   ├── Signup.jsx
-│   │   ├── Profile.jsx
-│   │   ├── Courses.jsx
-│   │   ├── CourseDetail.jsx
-│   │   ├── Mentorship.jsx
-│   │   ├── MockInterview.jsx
-│   │   ├── Admin.jsx
-│   │   └── AdminLogin.jsx
-│   │
-│   ├── firebase/
-│   │   └── firebase.js
-│   │
-│   ├── App.js
-│   ├── index.js
-│
-├── .env
-├── package.json
-└── README.md
+<img width="405" height="838" alt="Screenshot 2025-12-30 222157" src="https://github.com/user-attachments/assets/7720d6c5-bb3c-4cb9-93ee-9552c7f4402d" />
 
-⚙️ Setup Instructions (Local Run)
+
+Setup Instructions (Local Run)
+
 1️⃣ Clone Repository
+
 git clone https://github.com/ankurmittal9081/free-education-platform.git
 cd free-education-platform
 
 2️⃣ Install Dependencies
+
 npm install
 
 3️⃣ Create .env File (IMPORTANT)
 
 Create a file named .env in the root directory:
 
-REACT_APP_FIREBASE_API_KEY=your_api_key
-REACT_APP_FIREBASE_AUTH_DOMAIN=your_project.firebaseapp.com
-REACT_APP_FIREBASE_PROJECT_ID=your_project_id
-REACT_APP_FIREBASE_STORAGE_BUCKET=your_project.appspot.com
-REACT_APP_FIREBASE_MESSAGING_SENDER_ID=your_sender_id
-REACT_APP_FIREBASE_APP_ID=your_app_id
-
-REACT_APP_EMAILJS_SERVICE_ID=your_service_id
-REACT_APP_EMAILJS_TEMPLATE_ID=your_template_id
-REACT_APP_EMAILJS_PUBLIC_KEY=your_public_key
+<img width="587" height="311" alt="image" src="https://github.com/user-attachments/assets/4950fac5-980d-459a-b7c2-2085f41185a0" />
 
 
 ⚠️ Never commit .env to GitHub
@@ -181,9 +147,7 @@ Import repo in Vercel
 
 Add same .env variables in Vercel dashboard
 
-Deploy 🚀
-
-🎯 Hackathon Value Proposition
+Deploy 🚀🎯 Hackathon Value Proposition
 
 Free education for everyone
 
@@ -193,21 +157,13 @@ Real-time scalable backend
 
 Admin analytics & export
 
-Industry-grade UI/UX
+Industry-grade UI/UX👨‍💻
 
-👨‍💻 Author
+Author
 
 Ankur Mittal
+
 Engineering Student | Full-Stack Developer
 
 GitHub: https://github.com/ankurmittal9081
 
-⭐ Support
-
-If you like this project:
-
-⭐ Star the repository
-
-🧑‍🎓 Use it in your resume
-
-🚀 Extend it with payments & certificates
