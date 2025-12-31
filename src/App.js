@@ -69,6 +69,8 @@ import Mentorship from "./pages/Mentorship";
 import MockInterview from "./pages/MockInterview";
 import Login from "./pages/Login";
 import SignUp from "./pages/SignUp";
+import Forum from "./pages/Forum";
+
 import Profile from "./pages/Profile";
 
 import Admin from "./pages/Admin";
@@ -93,6 +95,8 @@ function App() {
         <Route path="/signup" element={<SignUp />} />
         <Route path="/admin-login" element={<AdminLogin />} />
         <Route path="/admin/mock-interviews" element={<AdminMockInterviews />} />
+        <Route path="/forum/:courseId" element={<Forum />} />
+
 
 
         {/* USER */}

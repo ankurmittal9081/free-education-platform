@@ -1477,6 +1477,218 @@
 // }
 
 // export default Admin;
+// import { useEffect, useState } from "react";
+// import {
+//   collection,
+//   onSnapshot,
+//   deleteDoc,
+//   doc,
+// } from "firebase/firestore";
+// import { db, auth } from "../firebase";
+// import { signOut } from "firebase/auth";
+// import { useNavigate } from "react-router-dom";
+// import "../pages/Admin.css";
+
+// function Admin() {
+//   const navigate = useNavigate();
+
+//   const [bookings, setBookings] = useState([]);
+//   const [mockBookings, setMockBookings] = useState([]);
+
+//   // 🔹 Fetch Mentorship + Mock Interview data
+//   useEffect(() => {
+//     const unsub1 = onSnapshot(collection(db, "bookings"), (snap) => {
+//       setBookings(
+//         snap.docs.map((d) => ({
+//           id: d.id,
+//           ...d.data(),
+//         }))
+//       );
+//     });
+
+//     const unsub2 = onSnapshot(collection(db, "mockInterviews"), (snap) => {
+//       setMockBookings(
+//         snap.docs.map((d) => ({
+//           id: d.id,
+//           ...d.data(),
+//         }))
+//       );
+//     });
+
+//     return () => {
+//       unsub1();
+//       unsub2();
+//     };
+//   }, []);
+
+//   // 🔹 STATS
+//   const totalBookings = bookings.length + mockBookings.length;
+
+//   const revenue =
+//     bookings.reduce((s, b) => s + (b.price || 99), 0) +
+//     mockBookings.reduce((s, b) => s + (b.price || 199), 0);
+
+//   const today = new Date().toDateString();
+//   const todayCount = [...bookings, ...mockBookings].filter((b) => {
+//     if (!b.createdAt?.seconds) return false;
+//     return (
+//       new Date(b.createdAt.seconds * 1000).toDateString() === today
+//     );
+//   }).length;
+
+//   // 🔹 Topic chart (Mentorship)
+//   const topicCount = {};
+//   bookings.forEach((b) => {
+//     if (!b.topic) return;
+//     topicCount[b.topic] = (topicCount[b.topic] || 0) + 1;
+//   });
+
+//   // 🔹 Delete
+//   async function handleDelete(collectionName, id) {
+//     if (!window.confirm("Delete this booking?")) return;
+//     await deleteDoc(doc(db, collectionName, id));
+//   }
+
+//   // 🔹 Logout
+//   async function logout() {
+//     await signOut(auth);
+//     navigate("/admin-login");
+//   }
+
+//   return (
+//     <div className="admin-page">
+//       {/* HEADER */}
+//       <div className="admin-header">
+//         <h1>🎯 Admin Dashboard</h1>
+//         <button className="logout-btn" onClick={logout}>
+//           Logout
+//         </button>
+//       </div>
+
+//       {/* STATS */}
+//       <div className="admin-stats">
+//         <div className="stat-card">📊 Total: {totalBookings}</div>
+//         <div className="stat-card">💰 Revenue: ₹{revenue}</div>
+//         <div className="stat-card">📅 Today: {todayCount}</div>
+//       </div>
+
+//       {/* 📊 CHART */}
+//       <div className="admin-box">
+//         <h2>📊 Mentorship Topics</h2>
+
+//         {Object.keys(topicCount).length === 0 ? (
+//           <p>No data</p>
+//         ) : (
+//           Object.keys(topicCount).map((t) => (
+//             <div key={t} className="chart-row">
+//               <span className="chart-label">{t}</span>
+//               <div
+//                 className="chart-bar"
+//                 style={{ width: topicCount[t] * 40 }}
+//               >
+//                 {topicCount[t]}
+//               </div>
+//             </div>
+//           ))
+//         )}
+//       </div>
+
+//       {/* ================= MENTORSHIP BOOKINGS ================= */}
+//       <div className="admin-box">
+//         <h2>📋 Mentorship Booking History</h2>
+
+//         {bookings.length === 0 ? (
+//           <p>No mentorship bookings</p>
+//         ) : (
+//           <table>
+//             <thead>
+//               <tr>
+//                 <th>#</th>
+//                 <th>Name</th>
+//                 <th>Email</th>
+//                 <th>Topic</th>
+//                 <th>Slot</th>
+//                 <th>Amount</th>
+//                 <th>Action</th>
+//               </tr>
+//             </thead>
+//             <tbody>
+//               {bookings.map((b, i) => (
+//                 <tr key={b.id}>
+//                   <td>{i + 1}</td>
+//                   <td>{b.name}</td>
+//                   <td>{b.email}</td>
+//                   <td>{b.topic}</td>
+//                   <td>{b.slot}</td>
+//                   <td>₹{b.price || 99}</td>
+//                   <td>
+//                     <button
+//                       className="delete-btn"
+//                       onClick={() =>
+//                         handleDelete("bookings", b.id)
+//                       }
+//                     >
+//                       🗑 Delete
+//                     </button>
+//                   </td>
+//                 </tr>
+//               ))}
+//             </tbody>
+//           </table>
+//         )}
+//       </div>
+
+//       {/* ================= MOCK INTERVIEWS ================= */}
+//       <div className="admin-box mock-box">
+//         <h2>🎯 Mock Interview Booking History</h2>
+
+//         {mockBookings.length === 0 ? (
+//           <p>No mock interview bookings</p>
+//         ) : (
+//           <table>
+//             <thead>
+//               <tr>
+//                 <th>#</th>
+//                 <th>Name</th>
+//                 <th>Email</th>
+//                 <th>Type</th>
+//                 <th>Date</th>
+//                 <th>Time</th>
+//                 <th>Amount</th>
+//                 <th>Action</th>
+//               </tr>
+//             </thead>
+//             <tbody>
+//               {mockBookings.map((b, i) => (
+//                 <tr key={b.id}>
+//                   <td>{i + 1}</td>
+//                   <td>{b.name}</td>
+//                   <td>{b.email}</td>
+//                   <td>{b.interviewType}</td>
+//                   <td>{b.preferredDate}</td>
+//                   <td>{b.preferredTime}</td>
+//                   <td>₹{b.price || 199}</td>
+//                   <td>
+//                     <button
+//                       className="delete-btn"
+//                       onClick={() =>
+//                         handleDelete("mockInterviews", b.id)
+//                       }
+//                     >
+//                       🗑 Delete
+//                     </button>
+//                   </td>
+//                 </tr>
+//               ))}
+//             </tbody>
+//           </table>
+//         )}
+//       </div>
+//     </div>
+//   );
+// }
+
+// export default Admin;
 import { useEffect, useState } from "react";
 import {
   collection,
@@ -1497,7 +1709,7 @@ function Admin() {
 
   // 🔹 Fetch Mentorship + Mock Interview data
   useEffect(() => {
-    const unsub1 = onSnapshot(collection(db, "bookings"), (snap) => {
+    const unsub1 = onSnapshot(collection(db, "mentorships"), (snap) => {
       setBookings(
         snap.docs.map((d) => ({
           id: d.id,
@@ -1525,8 +1737,8 @@ function Admin() {
   const totalBookings = bookings.length + mockBookings.length;
 
   const revenue =
-    bookings.reduce((s, b) => s + (b.price || 99), 0) +
-    mockBookings.reduce((s, b) => s + (b.price || 199), 0);
+    bookings.reduce((s, b) => s + (b.price || 0), 0) +
+    mockBookings.reduce((s, b) => s + (b.price || 0), 0);
 
   const today = new Date().toDateString();
   const todayCount = [...bookings, ...mockBookings].filter((b) => {
@@ -1539,8 +1751,8 @@ function Admin() {
   // 🔹 Topic chart (Mentorship)
   const topicCount = {};
   bookings.forEach((b) => {
-    if (!b.topic) return;
-    topicCount[b.topic] = (topicCount[b.topic] || 0) + 1;
+    if (!b.topicLabel) return;
+    topicCount[b.topicLabel] = (topicCount[b.topicLabel] || 0) + 1;
   });
 
   // 🔹 Delete
@@ -1572,20 +1784,16 @@ function Admin() {
         <div className="stat-card">📅 Today: {todayCount}</div>
       </div>
 
-      {/* 📊 CHART */}
+      {/* 📊 TOPIC CHART */}
       <div className="admin-box">
         <h2>📊 Mentorship Topics</h2>
-
         {Object.keys(topicCount).length === 0 ? (
           <p>No data</p>
         ) : (
           Object.keys(topicCount).map((t) => (
             <div key={t} className="chart-row">
               <span className="chart-label">{t}</span>
-              <div
-                className="chart-bar"
-                style={{ width: topicCount[t] * 40 }}
-              >
+              <div className="chart-bar" style={{ width: topicCount[t] * 40 }}>
                 {topicCount[t]}
               </div>
             </div>
@@ -1618,14 +1826,14 @@ function Admin() {
                   <td>{i + 1}</td>
                   <td>{b.name}</td>
                   <td>{b.email}</td>
-                  <td>{b.topic}</td>
+                  <td>{b.topicLabel}</td>
                   <td>{b.slot}</td>
-                  <td>₹{b.price || 99}</td>
+                  <td>₹{b.price}</td>
                   <td>
                     <button
                       className="delete-btn"
                       onClick={() =>
-                        handleDelete("bookings", b.id)
+                        handleDelete("mentorships", b.id)
                       }
                     >
                       🗑 Delete
@@ -1667,7 +1875,7 @@ function Admin() {
                   <td>{b.interviewType}</td>
                   <td>{b.preferredDate}</td>
                   <td>{b.preferredTime}</td>
-                  <td>₹{b.price || 199}</td>
+                  <td>₹{b.price}</td>
                   <td>
                     <button
                       className="delete-btn"
